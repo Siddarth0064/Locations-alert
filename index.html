@@ -10,6 +10,10 @@
 <body>
     <h2>Location Alert</h2>
     <button id="setLocationBtn">Set Location for Alert</button>
+    <div id="notification" style="display: none; position: fixed; top: 10px; right: 10px; padding: 15px; background-color: #333; color: #fff; border-radius: 5px;">
+        <p>You have reached your set location!</p>
+    </div>
+    
     <div id="map"></div>
     <audio id="alertSound" src="alertMess.mp3"></audio>
     <script src="index.js"></script>

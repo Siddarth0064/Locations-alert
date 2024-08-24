@@ -75,11 +75,19 @@ function startTrackingLocation() {
                     userMarker.setPosition(userLocation);
                 }
 
-                // Check if user is close to the alert location
-                if (alertLocation && isUserNearLocation(userLocation, alertLocation)) {
+               // Log distances for debugging
+               if (alertLocation) {
+                const distance = google.maps.geometry.spherical.computeDistanceBetween(
+                    new google.maps.LatLng(userLocation.lat, userLocation.lng),
+                    alertLocation
+                );
+                console.log(`Distance to alert location: ${distance} meters`);
+
+                if (isUserNearLocation(userLocation, alertLocation)) {
                     triggerAlert();
                 }
-            },
+            }
+        },
             (error) => {
                 console.error(error);
             },
@@ -93,7 +101,7 @@ function startTrackingLocation() {
 }
 
 function isUserNearLocation(userLocation, alertLocation) {
-    const distanceThreshold = 0.05; // Approx ~50 meters radius
+    const distanceThreshold = 50; // Approx ~50 meters radius
     const distance = google.maps.geometry.spherical.computeDistanceBetween(
         new google.maps.LatLng(userLocation.lat, userLocation.lng),
         alertLocation
@@ -102,18 +110,27 @@ function isUserNearLocation(userLocation, alertLocation) {
 }
 
 function triggerAlert() {
-    // Show alert message
-    alert('You have reached your set location!');
+    // Show custom notification
+    const notification = document.getElementById('notification');
+    notification.style.display = 'block';
 
     // Play sound
     const alertSound = document.getElementById('alertSound');
-    alertSound.play();
+    alertSound.play().catch(error => {
+        console.error("Error playing sound:", error);
+    });
+
+    // Hide notification after 5 seconds
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 5000);
 
     // Stop watching location after alert
     if (watchId) {
         navigator.geolocation.clearWatch(watchId);
     }
 }
+
 
 function handleLocationError(browserHasGeolocation, pos) {
     const infoWindow = new google.maps.InfoWindow({
