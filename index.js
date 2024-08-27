@@ -4,6 +4,8 @@ let alertMarker = null;
 let alertLocation = null;
 let watchId = null;
 
+let alertCircle; // Variable to hold the circle
+
 function initMap() {
     // Initialize map
     map = new google.maps.Map(document.getElementById("map"), {
@@ -64,6 +66,10 @@ document.getElementById('setLocationBtn').addEventListener('click', () => {
         if (alertMarker) {
             alertMarker.setMap(null);
         }
+        if (alertCircle) {
+            alertCircle.setMap(null);
+            alertCircle = null; // Ensure the circle variable is reset
+        }
 
         // Set the new alert location marker
         alertLocation = event.latLng;
@@ -88,13 +94,53 @@ document.getElementById('setLocationBtn').addEventListener('click', () => {
         // Set a timeout to automatically close the InfoWindow after 3 seconds
         setTimeout(() => {
             infoWindow.close();
-        }, 3000); // Display for 3 seconds
+        }, 2000); // Display for 2 seconds
+
+          // Draw the circle around the destination
+           drawCircle();
 
         // Stop the click event to set only one location
         google.maps.event.clearListeners(map, 'click');
     });
 });
 }
+
+function drawCircle() {
+    // Get the radius value from the input field and convert to meters
+    const radiusKm = parseFloat(document.getElementById('radius').value);
+    const radiusMeters = radiusKm * 1000;
+
+
+        // Debugging
+        console.log("Alert Location:", alertLocation);
+        console.log("Circle Radius (meters):", radiusMeters);
+
+    // Create or update the circle around the alert location
+    if (alertCircle) {
+        alertCircle.setCenter(alertLocation); // Update the center if circle already exists
+        alertCircle.setRadius(radiusMeters); // Update the radius
+    } else {
+        alertCircle = new google.maps.Circle({
+            
+            center: alertLocation,
+            radius: radiusMeters,
+            fillColor: '#FF0000',
+            fillOpacity: 0.25,
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.9,
+            strokeWeight: 2,
+            map: map
+        });
+        console.log("Drawing Circle for Destination");
+    }
+}
+
+// Event listener for updating the circle when the radius input changes
+document.getElementById('radius').addEventListener('input', () => {
+    if (alertLocation) {
+        drawCircle();
+    }
+});
 
 function startTrackingLocation() {
     if (navigator.geolocation) {
@@ -246,14 +292,28 @@ addDeleteEventListeners();
 
 
 function handleLocationError(browserHasGeolocation, pos) {
-    const infoWindow = new google.maps.InfoWindow({
-        position: pos,
-        content: browserHasGeolocation
-            ? "Error: The Geolocation service failed."
-            : "Error: Your browser doesn't support geolocation.",
+    // Set the error message content
+    const errorMessage = browserHasGeolocation
+    ? "Please turn on your location."
+    : "Please check your browser's network settings.";
+    
+    // Get modal elements
+    const modal = document.getElementById('locationErrorModal');
+    const errorMessageElement = document.getElementById('locationErrorMessage');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    
+    // Set the message text in the modal
+    errorMessageElement.textContent = errorMessage;
+
+    // Show the modal by changing display to 'block'
+    modal.style.display = 'block';
+    
+    // Close the modal when the user clicks the 'Close' button
+    closeModalBtn.addEventListener('click', function() {
+        modal.style.display = 'none'; // Hide the modal
     });
-    infoWindow.open(map);
 }
+
 
 // Trackpad rotation function using the wheel event
 function enableTrackpadRotation() {

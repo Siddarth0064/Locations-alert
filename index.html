@@ -14,10 +14,16 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <h2>Location Alert</h2>
+    <h2 class="advanced-heading">
+        <span>Z</span><span>o</span><span>n</span><span>e</span><span>A</span><span>l</span><span>e</span><span>r</span><span>t</span>
+        <span class="space">&nbsp;</span> <!-- Add space here -->
+        <span>G</span><span>e</span><span>o</span><span>M</span><span>a</span><span>p</span>
+    </h2>
+    
+    
     <div style="display: flex; justify-content: space-between; align-items: center;">
         <!-- Set Location Button -->
-        <button id="setLocationBtn">Set Location for Alert</button>
+        <button id="setLocationBtn">Set Destination for Alert</button>
         
         <!-- Gear Icon (Settings Button) -->
         <i id="settingsIcon" class="fa-solid fa-gear" style="cursor: pointer;margin-right: 20px; font-size: 24px;"></i>
@@ -72,18 +78,31 @@
    <div id="contactFormSection" style="flex: 1; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
      <h3 style="color: #0073e6; font-family: 'Poppins', sans-serif;">Enter contact info to notify someone when you arrive.</h3>
       <form id="contactForm">
-        <div class="contact-group" style="margin-bottom: 20px;">
-            <label for="name" style="font-family: 'Poppins', sans-serif; color: #333;">Name:</label>
-            <input type="text" id="name" name="name" required style="width: 90%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-top: 5px;"><br><br>
-            <label for="phone" style="font-family: 'Poppins', sans-serif; color: #333;">Phone Number:</label>
-            <input type="text" id="phone" name="phone" required style="width: 90%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-top: 5px;"><br><br>
-            <label for="message" style="font-family: 'Poppins', sans-serif; color: #333;">Message:</label>
-            <textarea id="message" name="message" rows="4" required style="width: 90%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-top: 5px;"></textarea><br><br>
+        <div class="contact-group" style="margin-bottom: 20px; display: flex; flex-direction: column; align-items: flex-start;">
+            <label for="name" style="font-family: 'Poppins', sans-serif; color: #333; margin-bottom: 5px;">Name:</label>
+            <input type="text" id="name" name="name" required style="width: 80%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+        
+            <label for="phone" style="font-family: 'Poppins', sans-serif; color: #333; margin-bottom: 5px; margin-top: 15px;">Phone Number:</label>
+            <input type="text" id="phone" name="phone" required style="width: 80%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+        
+            <label for="message" style="font-family: 'Poppins', sans-serif; color: #333; margin-bottom: 5px; margin-top: 15px;">Message:</label>
+            <textarea id="message" name="message" rows="4" required style="width: 80%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;"></textarea>
         </div>
+        
         <button type="submit" style="background-color: #0073e6; color: #fff; border: none; padding: 12px 24px; border-radius: 5px; cursor: pointer; font-family: 'Poppins', sans-serif;">Save Contact</button>
       </form>
    </div>
 </div>
+
+<!-- Modal Structure -->
+<div id="locationErrorModal" class="modal">
+    <div class="modal-content">
+        <h4>Location Error</h4>
+        <p id="locationErrorMessage"></p>
+        <button id="closeModalBtn">Close</button>
+    </div>
+</div>
+
     <script src="index.js"></script>
 </body>
 </html>
