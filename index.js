@@ -4,6 +4,8 @@ let alertMarker = null;
 let alertLocation = null;
 let watchId = null;
 
+let isAlertActive = false; // Track the state of the alert
+
 let alertCircle; // Variable to hold the circle
 
 function initMap() {
@@ -179,10 +181,12 @@ function startTrackingLocation() {
                 );
                 console.log(`Distance to alert location: ${distance} meters`);
 
-                const radiusMeters = getUserRadius(); // Get the user-defined radius in meters
-                    if (distance <= radiusMeters) {
-                        triggerAlert();
-                    }
+                
+                if (isUserNearLocation(userLocation, alertLocation)) {
+                    triggerAlert();
+                } else {
+                    stopAlert(); // Stop alert if user exits the zone
+                }
             }
         },
             (error) => {
@@ -212,24 +216,48 @@ function isUserNearLocation(userLocation, alertLocation) {
 }
 
 function triggerAlert() {
-    // Show custom notification
-    const notification = document.getElementById('notification');
-    notification.style.display = 'block';
+    if (!isAlertActive) {
+        // Show custom notification
+        const notificationPopup = document.getElementById('notificationPopup');
+        notificationPopup.style.display = 'block';
 
-    // Play sound
-    const alertSound = document.getElementById('alertSound');
-    alertSound.play().catch(error => {
-        console.error("Error playing sound:", error);
-    });
+        // Play sound
+        const alertSound = document.getElementById('alertSound');
+        alertSound.loop = true; // Loop the sound until stopped
+        alertSound.play().catch(error => {
+            console.error("Error playing sound:", error);
+        });
 
-    // Hide notification after 5 seconds
-    setTimeout(() => {
-        notification.style.display = 'none';
-    }, 5000);
+        // Set alert as active
+        isAlertActive = true;
 
-    // Stop watching location after alert
-    if (watchId) {
-        navigator.geolocation.clearWatch(watchId);
+        // Handle OK button click
+        document.getElementById('okButton').addEventListener('click', function() {
+            // Hide notification
+            notificationPopup.style.display = 'none';
+
+            // Stop sound
+            alertSound.pause();
+            alertSound.currentTime = 0; // Reset the sound
+
+            // Set alert as inactive
+            isAlertActive = false;
+        });
+    }
+}
+function stopAlert() {
+    // Hide notification if active
+    if (isAlertActive) {
+        const notificationPopup = document.getElementById('notificationPopup');
+        notificationPopup.style.display = 'none';
+
+        // Stop sound
+        const alertSound = document.getElementById('alertSound');
+        alertSound.pause();
+        alertSound.currentTime = 0; // Reset the sound
+
+        // Set alert as inactive
+        isAlertActive = false;
     }
 }
 document.getElementById('contactForm').addEventListener('submit', function (e) {
@@ -372,3 +400,53 @@ document.getElementById("settingsIcon").addEventListener("click", function() {
         icon.classList.add("rotate");
     }
 });
+
+
+
+// -------------------- to run at background --------------------------------------------
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+        .then(function(registration) {
+            console.log('Service Worker registered with scope:', registration.scope);
+        })
+        .catch(function(error) {
+            console.error('Service Worker registration failed:', error);
+        });
+}
+
+function requestNotificationPermission() {
+    if ('Notification' in window) {
+        Notification.requestPermission().then(function(permission) {
+            if (permission === 'granted') {
+                console.log('Notification permission granted.');
+            } else {
+                console.log('Notification permission denied.');
+            }
+        });
+    } else {
+        console.log('Notifications are not supported by this browser.');
+    }
+}
+
+// Call this function when you need to request permission
+requestNotificationPermission();
+
+
+
+function triggerNotification(title, body) {
+    if (Notification.permission === 'granted') {
+        navigator.serviceWorker.getRegistration().then(function(registration) {
+            registration.showNotification(title, {
+                body: body,
+                icon: '/path-to-icon.png',
+                badge: '/path-to-badge.png',
+                sound: '/path-to-alert-sound.mp3' // Optional: If you want to play a sound
+            });
+        });
+    } else {
+        console.log('Notification permission not granted.');
+    }
+}
+
+// Call this function when you need to trigger a notification
+triggerNotification('Alert!', 'You are approaching your destination!');
