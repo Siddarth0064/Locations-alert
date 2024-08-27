@@ -185,13 +185,18 @@ function startTrackingLocation() {
     }
 }
 
+// Function to get the user-defined radius in meters
+function getUserRadius() {
+    const radiusKm = parseFloat(document.getElementById('radius').value);
+    return radiusKm * 1000; // Convert kilometers to meters
+}
 function isUserNearLocation(userLocation, alertLocation) {
-    const distanceThreshold = 50; // Approx ~50 meters radius
     const distance = google.maps.geometry.spherical.computeDistanceBetween(
         new google.maps.LatLng(userLocation.lat, userLocation.lng),
         alertLocation
     );
-    return distance < distanceThreshold;
+    const radiusMeters = getUserRadius(); // Get the user-defined radius
+    return distance < radiusMeters;
 }
 
 function triggerAlert() {
