@@ -6,23 +6,35 @@ html, body {
     font-family: 'Arial', sans-serif; /* Use a clean font for better aesthetics */
     background: linear-gradient(135deg, #74ebd5, #ACB6E5); /* Subtle gradient background */
 }
+h2{
+    text-align: center;
+}
+#setLocationBtn{
+    color: #ffffff;
+    background-color: #3a86ff;
+    margin-left: 2rem;
+    border-radius: 5rem;
+    
+}
 
 /* Style the map container */
 #map {
     height: 80%; /* Adjust the map height to leave room for other content */
     margin: 2rem auto; /* Center the map with margin */
-    width: 90%; /* Adjust width of the map for responsiveness */
+    width: 100%; /* Adjust width of the map for responsiveness */
     border-radius: 15px; /* Smooth rounded corners */
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Add a soft shadow for depth */
     border: 2px solid #3a86ff; /* Add a stylish border around the map */
     transition: all 0.3s ease-in-out; /* Smooth transition for hover effects */
 }
 
-/* Add hover effect to the map */
+/* Add hover effect to the map
 #map:hover {
-    transform: scale(1.02); /* Slightly enlarge the map on hover */
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25); /* Enhance shadow on hover */
-}
+    transform: scale(1.02); /* Slightly enlarge the map on hover 
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25); /* Enhance shadow on hover 
+} */
+
+
 
 /* Additional content styling if needed */
 body::before {
@@ -34,4 +46,237 @@ body::before {
     font-weight: bold;
     color: #ffffff;
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Add subtle text shadow */
+}
+
+/* Sidebar hidden by default */
+.settings-sidebar {
+    color: #ccc;
+    width: 300px;
+    background-color: #1a1919;
+    padding: 20px;
+    position: fixed;
+    top: 20px; /* Positioned below the top */
+    right: -400px; /* Hidden off-screen initially */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: right 0.5s ease, opacity 0.5s ease; /* Add smooth transition */
+    z-index: 1001; /* Higher z-index than the setting icon */
+    height: auto;
+    opacity: 0; /* Initially hidden */
+}
+
+/* When sidebar is visible */
+.settings-sidebar.open {
+    right: 60px; /* Visible on screen */
+    opacity: 1; /* Fully visible */
+}
+
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 25px;
+    margin-left: 10px;
+    z-index: 1002; /* Ensure sliders have a higher z-index than the background */
+}
+
+/* Rotate animation for the gear icon */
+.rotate {
+    animation: rotateIcon 1s forwards;
+    z-index: 1000; /* Slightly lower z-index to allow sidebar to be on top */
+}
+
+.rotate-back {
+    animation: rotateIconBack 1s forwards;
+}
+  
+/* Hide the default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+  
+/* Slider styling */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #f43b3b;
+    transition: .4s;
+    border-radius: 34px;
+    z-index: 1002; /* Ensures it's visible above background */
+}
+  
+/* The slider when checked */
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 2.5px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+    z-index: 1002; /* Makes the slider's circle visible */
+}
+  
+/* On state - green background and move the slider */
+input:checked + .slider {
+    background-color: #12aef0;
+}
+  
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+  
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/* Ensure the text and elements inside the sidebar are visible */
+.settings-option label {
+    font-family: 'Poppins', sans-serif;
+    color: #000; /* Ensure label text is visible */
+}
+
+input[type="number"] {
+    padding: 10px;
+    border-radius: 5px;
+    width: 100%;
+    border: 1px solid #ccc;
+    color: #000; /* Ensure input text is visible */
+}
+
+/* Rotation keyframes */
+@keyframes rotateIcon {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotateIconBack {
+    0% {
+        transform: rotate(360deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Saved Contacts Section Styling */
+#savedContacts {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.contact-card {
+    background-color: #f0f8ff;
+    padding: 15px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.contact-card:hover {
+    transform: translateY(-5px);
+}
+
+.contact-name {
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    color: #333;
+}
+
+.delete-contact {
+    color: #ff4d4d;
+    cursor: pointer;
+    font-size: 20px;
+    transition: color 0.3s ease;
+}
+
+.delete-contact:hover {
+    color: #ff0000;
+}
+/* Container for delete icon and cap */
+.delete-icon-container {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+}
+
+/* Delete Icon */
+.delete-contact {
+    position: relative;
+    font-size: 24px;
+    color: #ff4d4d;
+    cursor: pointer;
+}
+
+/* Cap for delete icon */
+.cap {
+    position: absolute;
+    top: -8px;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background-color: #ff4d4d;
+    border-radius: 50% 50% 0 0;
+    transition: transform 0.5s ease, height 0.5s ease;
+    transform-origin: right;
+}
+
+/* Cap opening animation */
+.cap.open {
+    transform: scaleY(0.5); /* Simulates the cap opening */
+    height: 20px; /* Increase height to cover the text */
+}
+
+/* Animation for the contact name text */
+@keyframes suckText {
+    0% {
+        transform: scale(1) translateX(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0.5) translateX(calc(30vw - 24px)); /* Move text towards the delete icon */
+        opacity: 0;
+    }
+}
+
+/* Apply animation to contact name when deleting */
+.contact-name.sucked {
+    animation: suckText 1s ease forwards;
 }
