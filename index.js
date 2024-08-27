@@ -133,6 +133,17 @@ function drawCircle() {
         });
         console.log("Drawing Circle for Destination");
     }
+
+    // Check if user is within the new radius
+    if (userMarker) {
+        const userLocation = {
+            lat: userMarker.getPosition().lat(),
+            lng: userMarker.getPosition().lng(),
+        };
+        if (isUserNearLocation(userLocation, alertLocation)) {
+            triggerAlert();
+        }
+    }
 }
 
 // Event listener for updating the circle when the radius input changes
@@ -168,9 +179,10 @@ function startTrackingLocation() {
                 );
                 console.log(`Distance to alert location: ${distance} meters`);
 
-                if (isUserNearLocation(userLocation, alertLocation)) {
-                    triggerAlert();
-                }
+                const radiusMeters = getUserRadius(); // Get the user-defined radius in meters
+                    if (distance <= radiusMeters) {
+                        triggerAlert();
+                    }
             }
         },
             (error) => {
