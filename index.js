@@ -438,9 +438,9 @@ function triggerNotification(title, body) {
         navigator.serviceWorker.getRegistration().then(function(registration) {
             registration.showNotification(title, {
                 body: body,
-                icon: '/path-to-icon.png',
-                badge: '/path-to-badge.png',
-                sound: '/path-to-alert-sound.mp3' // Optional: If you want to play a sound
+                icon: 'E:/Location_Alert/alertICON.jpg',
+                badge: 'E:/Location_Alert/notificationIMG.png',
+                sound: 'E:/Location_Alert/alertMess.mp3' // Optional: If you want to play a sound
             });
         });
     } else {
